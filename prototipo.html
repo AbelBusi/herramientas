@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototipo Interactivo - Sistema Gestión Médica UTP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Iconos Phosphor para mantener un estilo limpio, profesional y no-IA -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .view { display: none; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- NAV BAR PRINCIPAL -->
+    <nav class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo / Origen -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigate('view-dashboard')">
+                <div class="bg-teal-600 p-2 rounded-lg text-white flex items-center justify-center">
+                    <i class="ph ph-heart-beat text-xl font-bold"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight block">SaludUTP</span>
+                    <span class="text-xs text-slate-400 block -mt-1">Sede Chiclayo</span>
+                </div>
+            </div>
+
+            <!-- Navegación Escritorio -->
+            <div class="hidden md:flex items-center space-x-2">
+                <button id="btn-nav-view-dashboard" onclick="navigate('view-dashboard')" class="px-3 py-2 rounded-md text-sm font-medium transition-colors bg-slate-800 text-white">
+                    <i class="ph ph-chart-pie-slice inline-block mr-1.5 align-middle"></i>Panel Principal
+                </button>
+                <button id="btn-nav-view-busqueda" onclick="navigate('view-busqueda')" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                    <i class="ph ph-magnifying-glass inline-block mr-1.5 align-middle"></i>Buscar Médicos
+                </button>
+                <button id="btn-nav-view-reserva" onclick="navigate('view-reserva')" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                    <i class="ph ph-calendar-plus inline-block mr-1.5 align-middle"></i>Nueva Cita
+                </button>
+            </div>
+
+            <!-- Botón de Menú Hamburguesa (Móvil) -->
+            <div class="md:hidden">
+                <button id="hamburger-btn" onclick="toggleMobileMenu()" class="p-2 text-slate-400 hover:text-white focus:outline-none">
+                    <i id="hamburger-icon" class="ph ph-list text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menú Desplegable Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden mt-3 border-t border-slate-800 pt-2 space-y-1">
+            <button onclick="navigate('view-dashboard'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-white bg-slate-800 block">
+                <i class="ph ph-chart-pie-slice mr-2"></i>Panel Principal
+            </button>
+            <button onclick="navigate('view-busqueda'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 block">
+                <i class="ph ph-magnifying-glass mr-2"></i>Buscar Médicos
+            </button>
+            <button onclick="navigate('view-reserva'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 block">
+                <i class="ph ph-calendar-plus mr-2"></i>Nueva Cita
+            </button>
+        </div>
+    </nav>
+
+    <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- 1. VISTA: DASHBOARD / PANEL PRINCIPAL -->
+        <section id="view-dashboard" class="view active space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Módulo de Citas Universitarias</h1>
+                    <p class="text-sm text-slate-500 mt-0.5">Resumen de disponibilidad y control de atención médica estudiantil.</p>
+                </div>
+                <button onclick="navigate('view-reserva')" class="mt-3 md:mt-0 bg-teal-700 hover:bg-teal-800 text-white font-medium text-sm px-4 py-2.5 rounded-lg shadow-xs transition-colors flex items-center justify-center space-x-2">
+                    <i class="ph ph-plus-bold"></i>
+                    <span>Agendar Nueva Cita</span>
+                </button>
+            </div>
+
+            <!-- Métricas (Grid Cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-start justify-between">
+                    <div class="space-y-1">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Citas del Día</span>
+                        <span class="text-3xl font-bold text-slate-900 block tracking-tight">42</span>
+                        <span class="text-xs text-teal-600 font-medium block"><i class="ph ph-arrow-up-right inline mr-0.5"></i> 12% más que ayer</span>
+                    </div>
+                    <div class="bg-teal-50 p-2.5 rounded-lg text-teal-700"><i class="ph ph-calendar-check text-2xl"></i></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-start justify-between">
+                    <div class="space-y-1">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Especialidad Crítica</span>
+                        <span class="text-3xl font-bold text-slate-900 block tracking-tight">Psicología</span>
+                        <span class="text-xs text-rose-600 font-medium block"><i class="ph ph-warning-circle inline mr-0.5"></i> Alta demanda de cupos</span>
+                    </div>
+                    <div class="bg-rose-50 p-2.5 rounded-lg text-rose-700"><i class="ph ph-brain text-2xl"></i></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-start justify-between sm:col-span-2 lg:col-span-1">
+                    <div class="space-y-1">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block">Tiempo de Espera</span>
+                        <span class="text-3xl font-bold text-slate-900 block tracking-tight">14 min</span>
+                        <span class="text-xs text-slate-500 block">Promedio de ingreso a consultorio</span>
+                    </div>
+                    <div class="bg-slate-100 p-2.5 rounded-lg text-slate-700"><i class="ph ph-clock text-2xl"></i></div>
+                </div>
+            </div>
+
+            <!-- Tabla de Accesos Rápidos / Historial Ficticio -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+                <div class="px-5 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <h3 class="font-bold text-slate-900 text-sm">Próximos turnos en cola</h3>
+                    <span class="px-2 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-md">Sede Operativa</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100/50 text-slate-500 border-b border-slate-200 font-medium">
+                                <th class="p-3 pl-5">Código Alumno</th>
+                                <th class="p-3">Especialidad</th>
+                                <th class="p-3">Médico asignado</th>
+                                <th class="p-3 text-right pr-5">Horario programado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-normal text-slate-700">
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="p-3 pl-5 font-mono font-medium text-slate-900">U21304562</td>
+                                <td class="p-3">Medicina General</td>
+                                <td class="p-3">Dra. Marta Medina</td>
+                                <td class="p-3 text-right pr-5 font-medium text-teal-700">08:30 AM</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="p-3 pl-5 font-mono font-medium text-slate-900">U19208841</td>
+                                <td class="p-3">Psicología</td>
+                                <td class="p-3">Dr. Carlos Fuentes</td>
+                                <td class="p-3 text-right pr-5 font-medium text-teal-700">09:15 AM</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="p-3 pl-5 font-mono font-medium text-slate-900">U22211504</td>
+                                <td class="p-3">Nutrición</td>
+                                <td class="p-3">Lic. Sofía Ramos</td>
+                                <td class="p-3 text-right pr-5 font-medium text-teal-700">10:00 AM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. VISTA: BÚSQUEDA / FILTRADO DE MÉDICOS -->
+        <section id="view-busqueda" class="view space-y-6">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Directorio Clínico Universitario</h1>
+                <p class="text-sm text-slate-500 mt-0.5">Búsqueda rápida de personal médico y turnos disponibles por especialidad.</p>
+            </div>
+
+            <!-- Caja de Búsqueda Integrada -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="relative md:col-span-2">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="ph ph-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="search-input" onkeyup="filterMedicos()" placeholder="Buscar por apellido del médico o especialidad..." class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm placeholder-slate-400 text-slate-800 focus:outline-none focus:border-slate-400 transition-colors">
+                </div>
+                <div>
+                    <select id="filter-select" onchange="filterMedicos()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-slate-400 transition-colors">
+                        <option value="TODOS">Todas las Especialidades</option>
+                        <option value="MEDICINA">Medicina General</option>
+                        <option value="PSICOLOGIA">Psicología</option>
+                        <option value="NUTRICION">Nutrición</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Listado de Resultados de Búsqueda -->
+            <div id="medicos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Médico Card 1 -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between" data-especialidad="MEDICINA" data-nombre="marta medina">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 font-bold text-sm">MM</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm leading-tight">Dra. Marta Medina</h4>
+                                <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium inline-block mt-1">Medicina General</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500"><i class="ph ph-map-pin inline mr-1"></i>Consultorio A-102 (Piso 1)</p>
+                    </div>
+                    <button onclick="seleccionarMedicoPrevia('Medicina General', 'Dra. Marta Medina')" class="mt-4 w-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs py-2 rounded-lg transition-colors">
+                        Seleccionar Especialista
+                    </button>
+                </div>
+
+                <!-- Médico Card 2 -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between" data-especialidad="PSICOLOGIA" data-nombre="carlos fuentes">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 font-bold text-sm">CF</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm leading-tight">Dr. Carlos Fuentes</h4>
+                                <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium inline-block mt-1">Psicología</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500"><i class="ph ph-map-pin inline mr-1"></i>Consultorio B-204 (Bienestar Universitario)</p>
+                    </div>
+                    <button onclick="seleccionarMedicoPrevia('Psicología', 'Dr. Carlos Fuentes')" class="mt-4 w-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs py-2 rounded-lg transition-colors">
+                        Seleccionar Especialista
+                    </button>
+                </div>
+
+                <!-- Médico Card 3 -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between" data-especialidad="NUTRICION" data-nombre="sofia ramos">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 font-bold text-sm">SR</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm leading-tight">Lic. Sofía Ramos</h4>
+                                <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium inline-block mt-1">Nutrición</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500"><i class="ph ph-map-pin inline mr-1"></i>Consultorio A-105 (Piso 1)</p>
+                    </div>
+                    <button onclick="seleccionarMedicoPrevia('Nutrición', 'Lic. Sofía Ramos')" class="mt-4 w-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs py-2 rounded-lg transition-colors">
+                        Seleccionar Especialista
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. VISTA: PROCESO / FORMULARIO DE RESERVA -->
+        <section id="view-reserva" class="view space-y-6">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Formulario de Registro de Cita</h1>
+                <p class="text-sm text-slate-500 mt-0.5">Introduce tus datos de alumno y selecciona el bloque de atención médica.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <!-- Formulario Primario -->
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs lg:col-span-2 space-y-4">
+                    <h3 class="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">Información Requerida</h3>
+                    
+                    <!-- Validaciones Básicas Visuales -->
+                    <form id="appointment-form" onsubmit="validarFormulario(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold text-slate-600 block">Código del Alumno</label>
+                                <input type="text" id="form-codigo" placeholder="Ej. U21304562" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono text-slate-800 focus:outline-none focus:border-slate-400 transition-colors">
+                                <p id="error-codigo" class="text-xs text-rose-600 hidden font-medium">Formato incorrecto. Debe iniciar con U seguido de 8 números.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold text-slate-600 block">Número Telefónico</label>
+                                <input type="text" id="form-telefono" placeholder="987654321" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-400 transition-colors">
+                                <p id="error-telefono" class="text-xs text-rose-600 hidden font-medium">Debe contener exactamente 9 dígitos numéricos.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold text-slate-600 block">Especialidad Requerida</label>
+                                <select id="form-especialidad" onchange="syncMedicosSelect()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-slate-400 transition-colors">
+                                    <option value="">Selecciona...</option>
+                                    <option value="Medicina General">Medicina General</option>
+                                    <option value="Psicología">Psicología</option>
+                                    <option value="Nutrición">Nutrición</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold text-slate-600 block">Especialista Disponible</label>
+                                <select id="form-medico" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-slate-400 transition-colors">
+                                    <option value="">Selecciona especialidad primero...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-600 block">Seleccione Turno Horario</label>
+                            <!-- Simulación de bloques -->
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                                <label class="border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors text-center">
+                                    <input type="radio" name="turno-radio" value="08:30 AM" checked class="sr-only">
+                                    <span class="text-sm font-semibold text-slate-900">08:30 AM</span>
+                                    <span class="text-[10px] font-medium text-teal-600 bg-teal-50 px-1.5 py-0.2 mt-1 rounded">Disponible</span>
+                                </label>
+                                <label class="border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors text-center">
+                                    <input type="radio" name="turno-radio" value="09:45 AM" class="sr-only">
+                                    <span class="text-sm font-semibold text-slate-900">09:45 AM</span>
+                                    <span class="text-[10px] font-medium text-teal-600 bg-teal-50 px-1.5 py-0.2 mt-1 rounded">Disponible</span>
+                                </label>
+                                <label class="opacity-50 border border-slate-200 rounded-lg p-2.5 flex flex-col items-center justify-center bg-slate-100 cursor-not-allowed text-center">
+                                    <span class="text-sm font-semibold text-slate-400 line-through">11:00 AM</span>
+                                    <span class="text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.2 mt-1 rounded">Ocupado</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium text-sm py-2.5 rounded-lg shadow-xs transition-colors">
+                                Continuar a Verificación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Barra lateral informativa / Wireframe contextual -->
+                <div class="bg-slate-100 border border-slate-200 rounded-xl p-5 space-y-4">
+                    <h4 class="font-bold text-slate-900 text-sm"><i class="ph ph-info inline mr-1.5 align-middle"></i>Toma en cuenta</h4>
+                    <ul class="text-xs text-slate-600 space-y-2.5 leading-relaxed">
+                        <li class="flex items-start"><i class="ph ph-check-circle text-teal-600 text-base mr-2 flex-shrink-0"></i>El servicio médico es completamente gratuito para alumnos matriculados en el periodo actual.</li>
+                        <li class="flex items-start"><i class="ph ph-check-circle text-teal-600 text-base mr-2 flex-shrink-0"></i> Tolerancia máxima de ingreso de 5 minutos antes del bloqueo del turno.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. VISTA: DETALLE Y CONFIRMACIÓN -->
+        <section id="view-confirmacion" class="view space-y-6">
+            <div class="text-center max-w-md mx-auto space-y-2">
+                <div class="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center text-teal-700 mx-auto text-2xl">
+                    <i class="ph ph-shield-check"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Verificación de Ticket</h1>
+                <p class="text-sm text-slate-500">Confirma los datos antes de registrar el cupo en el servidor de base de datos.</p>
+            </div>
+
+            <!-- Ticket Estructurado -->
+            <div class="bg-white border border-slate-200 rounded-xl max-w-lg mx-auto overflow-hidden shadow-md">
+                <div class="bg-slate-900 text-white px-5 py-4 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Comprobante de Reserva</span>
+                        <span class="font-mono text-sm font-medium text-teal-400">TICKET-2026-TMP</span>
+                    </div>
+                    <i class="ph ph-barcode text-3xl opacity-60"></i>
+                </div>
+                <div class="p-5 space-y-4 text-sm divide-y divide-slate-100">
+                    <div class="grid grid-cols-2 py-2">
+                        <span class="text-slate-500 font-medium">Estudiante:</span>
+                        <span id="ticket-codigo" class="text-slate-900 font-mono font-bold text-right">-</span>
+                    </div>
+                    <div class="grid grid-cols-2 pt-3 py-2">
+                        <span class="text-slate-500 font-medium">Especialidad:</span>
+                        <span id="ticket-especialidad" class="text-slate-900 font-medium text-right">-</span>
+                    </div>
+                    <div class="grid grid-cols-2 pt-3 py-2">
+                        <span class="text-slate-500 font-medium">Médico Especialista:</span>
+                        <span id="ticket-medico" class="text-slate-900 font-medium text-right">-</span>
+                    </div>
+                    <div class="grid grid-cols-2 pt-3 py-2">
+                        <span class="text-slate-500 font-medium">Bloque Horario:</span>
+                        <span id="ticket-horario" class="text-slate-900 font-bold text-teal-700 text-right">-</span>
+                    </div>
+                </div>
+                <div class="bg-slate-50 px-5 py-4 border-t border-slate-100 flex items-center space-x-3">
+                    <button onclick="navigate('view-reserva')" class="w-1/3 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-xs py-2.5 rounded-lg transition-colors">
+                        Modificar
+                    </button>
+                    <button onclick="ejecutarConfirmacionFinal()" class="w-2/3 bg-teal-700 hover:bg-teal-800 text-white font-medium text-xs py-2.5 rounded-lg transition-colors shadow-xs">
+                        Confirmar Registro
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER MOCKUP -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-400 mt-auto">
+        <p>© 2026 Universidad Tecnológica del Perú - Ingeniería de Sistemas. Prototipo de validación de interfaz (C.R.A.P.).</p>
+    </footer>
+
+    <!-- LÓGICA INTERACTIVA EN JAVASCRIPT -->
+    <script>
+        // Data estructurada para simular la vinculación dinámica en el formulario
+        const medicosData = {
+            "Medicina General": ["Dra. Marta Medina"],
+            "Psicología": ["Dr. Carlos Fuentes"],
+            "Nutrición": ["Lic. Sofía Ramos"]
+        };
+
+        // 1. NAVEGACIÓN ENTRE PANTALLAS (SPA Model)
+        function navigate(viewId) {
+            // Ocultar todas las vistas
+            const views = document.querySelectorAll('.view');
+            views.forEach(v => v.classList.remove('active'));
+
+            // Mostrar vista seleccionada
+            const targetView = document.getElementById(viewId);
+            if (targetView) targetView.classList.add('active');
+
+            // Sincronizar estilos de botones de navegación (Escritorio)
+            const navButtons = document.querySelectorAll('.hidden.md\\:flex button');
+            navButtons.forEach(btn => {
+                if (btn.id === `btn-nav-${viewId}`) {
+                    btn.classList.add('bg-slate-800', 'text-white');
+                    btn.classList.remove('text-slate-300');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white');
+                    btn.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+                }
+            });
+        }
+
+        // 2. MENÚ HAMBURGUESA (Interacción móvil)
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = "ph ph-x text-2xl"; // Cambia icono a cerrar
+            } else {
+                menu.classList.add('hidden');
+                icon.className = "ph ph-list text-2xl"; // Cambia icono a hamburguesa
+            }
+        }
+
+        // 3. BÚSQUEDA Y FILTRADO INTEGRADO
+        function filterMedicos() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const filterValue = document.getElementById('filter-select').value;
+            const cards = document.querySelectorAll('#medicos-grid > div');
+
+            cards.forEach(card => {
+                const esp = card.getAttribute('data-especialidad');
+                const nombre = card.getAttribute('data-nombre');
+                
+                const matchesFilter = (filterValue === 'TODOS' || esp === filterValue);
+                const matchesSearch = (nombre.includes(query) || esp.toLowerCase().includes(query));
+
+                if (matchesFilter && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 4. ACCIÓN RÁPIDA: SELECCIONAR DESDE EL DIRECTORIO
+        function seleccionarMedicoPrevia(especialidad, medico) {
+            document.getElementById('form-especialidad').value = especialidad;
+            syncMedicosSelect();
+            document.getElementById('form-medico').value = medico;
+            navigate('view-reserva');
+        }
+
+        // Sincroniza médicos según la especialidad elegida en el formulario
+        function syncMedicosSelect() {
+            const espSelected = document.getElementById('form-especialidad').value;
+            const medicoSelect = document.getElementById('form-medico');
+            
+            medicoSelect.innerHTML = '';
+            
+            if (!espSelected || !medicosData[espSelected]) {
+                medicoSelect.innerHTML = '<option value="">Selecciona especialidad primero...</option>';
+                return;
+            }
+
+            medicosData[espSelected].forEach(medico => {
+                const opt = document.createElement('option');
+                opt.value = medico;
+                opt.textContent = medico;
+                medicoSelect.appendChild(opt);
+            });
+        }
+
+        // 5. VALIDACIONES BÁSICAS Y SIMULACIÓN DE PROCESO
+        function validarFormulario(event) {
+            event.preventDefault();
+
+            const inputCodigo = document.getElementById('form-codigo').value.trim();
+            const inputTelefono = document.getElementById('form-telefono').value.trim();
+            const inputEspecialidad = document.getElementById('form-especialidad').value;
+            const inputMedico = document.getElementById('form-medico').value;
+            
+            // Regex básicas limpias
+            const regexCodigo = /^U\d{8}$/i;
+            const regexTelefono = /^\d{9}$/;
+
+            let isValid = true;
+
+            // Validar código
+            if (!regexCodigo.test(inputCodigo)) {
+                document.getElementById('error-codigo').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('error-codigo').classList.add('hidden');
+            }
+
+            // Validar teléfono
+            if (!regexTelefono.test(inputTelefono)) {
+                document.getElementById('error-telefono').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('error-telefono').classList.add('hidden');
+            }
+
+            // Validaciones de selectores obligatorios
+            if (!inputEspecialidad || !inputMedico) {
+                alert("Por favor, complete la selección de Especialidad y Especialista.");
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Capturar el radio del turno seleccionado
+                const selectedTurno = document.querySelector('input[name="turno-radio"]:checked').value;
+
+                // Transferir datos a la pantalla de detalle/confirmación
+                document.getElementById('ticket-codigo').textContent = inputCodigo.toUpperCase();
+                document.getElementById('ticket-especialidad').textContent = inputEspecialidad;
+                document.getElementById('ticket-medico').textContent = inputMedico;
+                document.getElementById('ticket-horario').textContent = selectedTurno;
+
+                // Avanzar a la pantalla de confirmación
+                navigate('view-confirmacion');
+            }
+        }
+
+        // SIMULACIÓN DE PROCESO FINAL
+        function ejecutarConfirmacionFinal() {
+            alert("Operación Exitosa:\nLa cita médica ha sido guardada de forma persistente. El cupo ha sido reservado en el sistema.");
+            // Resetear el formulario y volver al inicio
+            document.getElementById('appointment-form').reset();
+            syncMedicosSelect();
+            navigate('view-dashboard');
+        }
+    </script>
+</body>
+</html>

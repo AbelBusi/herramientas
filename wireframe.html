@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe - Sistema Citas Médicas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+
+        .wf-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px dashed #999999;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .wf-header {
+            border-bottom: 2px solid #cccccc;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eaeaea;
+            padding: 10px;
+        }
+
+        .wf-logo {
+            font-weight: bold;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            background: #fff;
+        }
+
+        .wf-nav button {
+            background: #fff;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .wf-nav button.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .wf-screen {
+            display: none;
+        }
+
+        .wf-screen.active {
+            display: block;
+        }
+
+        .wf-grid-login {
+            max-width: 400px;
+            margin: 60px auto;
+            border: 1px solid #cccccc;
+            padding: 30px;
+            background: #fafafa;
+            text-align: center;
+        }
+
+        .wf-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #999999;
+            background: #ffffff;
+        }
+
+        .wf-btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #dddddd;
+            border: 1px solid #666666;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .wf-btn-primary:hover {
+            background: #cccccc;
+        }
+
+        .wf-dashboard-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 20px;
+        }
+
+        .wf-sidebar {
+            border-right: 1px solid #cccccc;
+            padding-right: 15px;
+        }
+
+        .wf-sidebar-menu {
+            list-style: none;
+        }
+
+        .wf-sidebar-menu li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .wf-sidebar-menu li:hover {
+            background: #eaeaea;
+        }
+
+        .wf-card {
+            border: 1px solid #cccccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .wf-flex-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .wf-badge-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border: 1px solid #666;
+            background: #eee;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .wf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .wf-table th, .wf-table td {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .wf-table th {
+            background: #eaeaea;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .calendar-slot {
+            border: 1px solid #999;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .calendar-slot.booked {
+            background: #e0e0e0;
+            color: #999;
+            text-decoration: line-through;
+            cursor: not-allowed;
+        }
+
+        .calendar-slot:not(.booked):hover {
+            background: #dddddd;
+        }
+
+        .wf-footer-info {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px dashed #bbb;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wf-container">
+        
+        <header class="wf-header">
+            <div class="wf-logo">[ LOGO: Clínica Universitaria ]</div>
+            <nav class="wf-nav">
+                <button onclick="switchScreen('screen-login')" id="btn-screen-login" class="active">1. Login</button>
+                <button onclick="switchScreen('screen-dashboard')" id="btn-screen-dashboard">2. Panel Paciente</button>
+                <button onclick="switchScreen('screen-reserva')" id="btn-screen-reserva">3. Agendar Cita</button>
+                <button onclick="switchScreen('screen-medico')" id="btn-screen-medico">4. Vista Médico</button>
+            </nav>
+        </header>
+
+        <main>
+            <div id="screen-login" class="wf-screen active">
+                <div class="wf-grid-login">
+                    <h3>[ Formulario de Acceso ]</h3>
+                    <p style="font-size:12px; color:#666; margin-bottom:15px;">Ingreso exclusivo para la comunidad universitaria</p>
+                    <input type="text" class="wf-field" placeholder="[ INPUT: Correo Institucional ]" disabled />
+                    <input type="password" class="wf-field" placeholder="[ INPUT: Contraseña ]" disabled />
+                    <button class="wf-btn-primary" onclick="switchScreen('screen-dashboard')">[ BOTÓN: Iniciar Sesión ]</button>
+                    <p style="margin-top: 15px; font-size: 12px;"><a href="#">¿No tienes cuenta? Regístrate aquí</a></p>
+                </div>
+            </div>
+
+            <div id="screen-dashboard" class="wf-screen">
+                <div class="wf-dashboard-layout">
+                    <aside class="wf-sidebar">
+                        <p style="font-weight: bold; margin-bottom: 10px;">[ Menú Paciente ]</p>
+                        <ul class="wf-sidebar-menu">
+                            <li onclick="switchScreen('screen-dashboard')">Inicio / Mis Citas</li>
+                            <li onclick="switchScreen('screen-reserva')">Reservar Cita</li>
+                            <li>Mi Perfil</li>
+                            <li onclick="switchScreen('screen-login')" style="margin-top: 40px; border-color: #fcc;">Cerrar Sesión</li>
+                        </ul>
+                    </aside>
+                    <section class="wf-content">
+                        <h2>Bienvenido, [ Nombre del Paciente ]</h2>
+                        <p style="color: #666; font-size: 14px;">Código universitario: [ UXXXXXXXX ]</p>
+                        
+                        <div style="margin-top: 25px;">
+                            <h3>[ Sección: Próximas Citas Programadas ]</h3>
+                            <div class="wf-flex-cards">
+                                <div class="wf-card">
+                                    <strong>Medicina General</strong>
+                                    <p>Dr. [ Apellido Médico ]</p>
+                                    <p>Fecha: 28/05/2026</p>
+                                    <p>Hora: 09:30 AM</p>
+                                    <span class="wf-badge-status">[ Estado: Confirmada ]</span>
+                                    <button class="wf-btn-primary" style="padding:5px; font-size:11px; margin-top:10px;">[ Cancelar ]</button>
+                                </div>
+                                <div class="wf-card" style="border-style: dashed; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer;" onclick="switchScreen('screen-reserva')">
+                                    <p><strong>+ Agendar Nueva Cita</strong><br><span style="font-size:11px; color:#666;">Ver horarios disponibles</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="screen-reserva" class="wf-screen">
+                <div class="wf-dashboard-layout">
+                    <aside class="wf-sidebar">
+                        <p style="font-weight: bold; margin-bottom: 10px;">[ Menú Paciente ]</p>
+                        <ul class="wf-sidebar-menu">
+                            <li onclick="switchScreen('screen-dashboard')">Inicio / Mis Citas</li>
+                            <li onclick="switchScreen('screen-reserva')">Reservar Cita</li>
+                            <li>Mi Perfil</li>
+                        </ul>
+                    </aside>
+                    <section class="wf-content">
+                        <h2>[ Flujo de Reserva de Cita ]</h2>
+                        <p style="color:#666; margin-bottom:20px;">Complete los filtros para visualizar los bloques horarios.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="font-size: 12px; font-weight: bold;">1. Seleccione Especialidad</label>
+                                <select class="wf-field" style="background: #fff;">
+                                    <option>[ SELECT v Medicina General ]</option>
+                                    <option>[ Odontología ]</option>
+                                    <option>[ Psicología ]</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; font-weight: bold;">2. Seleccione Médico (Opcional)</label>
+                                <select class="wf-field" style="background: #fff;">
+                                    <option>[ SELECT v Cualquier Médico Disponible ]</option>
+                                    <option>[ Dr. Carlos Mendoza ]</option>
+                                    <option>[ Dra. Ana Espinoza ]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <h3>3. Horarios Disponibles para la Semana Actual</h3>
+                            <div class="calendar-grid">
+                                <div class="calendar-slot">08:00 AM<br><span style="font-size:11px;">[ Reservar ]</span></div>
+                                <div class="calendar-slot booked">08:45 AM<br><span style="font-size:11px;">[ Ocupado ]</span></div>
+                                <div class="calendar-slot">09:30 AM<br><span style="font-size:11px;">[ Reservar ]</span></div>
+                                <div class="calendar-slot">10:15 AM<br><span style="font-size:11px;">[ Reservar ]</span></div>
+                                <div class="calendar-slot booked">11:00 AM<br><span style="font-size:11px;">[ Ocupado ]</span></div>
+                                <div class="calendar-slot">11:45 AM<br><span style="font-size:11px;">[ Reservar ]</span></div>
+                            </div>
+                        </div>
+
+                        <button class="wf-btn-primary" style="margin-top: 25px; width: auto; padding: 10px 30px;" onclick="switchScreen('screen-dashboard')">[ Confirmar Reserva e Ir a Mis Citas ]</button>
+                    </section>
+                </div>
+            </div>
+
+            <div id="screen-medico" class="wf-screen">
+                <div class="wf-dashboard-layout">
+                    <aside class="wf-sidebar">
+                        <p style="font-weight: bold; margin-bottom: 10px;">[ Panel del Médico ]</p>
+                        <ul class="wf-sidebar-menu">
+                            <li>Mi Agenda Diaria</li>
+                            <li>Configurar Disponibilidad</li>
+                            <li onclick="switchScreen('screen-login')" style="margin-top: 80px; border-color: #fcc;">Salir</li>
+                        </ul>
+                    </aside>
+                    <section class="wf-content">
+                        <h2>Agenda de Citas: Dr. [ Apellido Médico ]</h2>
+                        <p style="color: #666; font-size: 14px;">Especialidad: [ Medicina General ] | Fecha de Hoy: [ DD/MM/AAAA ]</p>
+                        
+                        <table class="wf-table">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Paciente</th>
+                                    <th>Código U.</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>08:00 AM</td>
+                                    <td>[ Nombre Paciente 1 ]</td>
+                                    <td>U2230412</td>
+                                    <td><button style="padding: 2px 5px;">[ Ver Datos ]</button></td>
+                                </tr>
+                                <tr>
+                                    <td>08:45 AM</td>
+                                    <td>-- BLOQUE LIBRE --</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                                <tr>
+                                    <td>09:30 AM</td>
+                                    <td>[ Nombre Paciente 2 ]</td>
+                                    <td>U2120554</td>
+                                    <td><button style="padding: 2px 5px;">[ Ver Datos ]</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <footer class="wf-footer-info">
+            Estructura de Alambres (Wireframe Técnico) - Entrega Avance 1. No incluye estilos de marca ni lógica de datos dinámica.
+        </footer>
+    </div>
+
+    <script>
+        function switchScreen(screenId) {
+            const screens = document.querySelectorAll('.wf-screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            const activeScreen = document.getElementById(screenId);
+            if (activeScreen) {
+                activeScreen.classList.add('active');
+            }
+
+            const buttons = document.querySelectorAll('.wf-nav button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const activeButton = document.getElementById('btn-' + screenId);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
